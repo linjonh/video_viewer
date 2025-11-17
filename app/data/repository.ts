@@ -1,0 +1,56 @@
+"use server";
+import { log } from "console";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+
+export async function loadVideoList(page: number = 1, limit: number = 80) {
+  const url = `https://api.guangsuapi.com/api.php/provide/vod/?ac=videolist&limit=${limit}&pg=${page}`;
+  log("url:", url);
+  const res = await fetch(url);
+  if (res.status == 200) {
+    const json = await res.json();
+    return json;
+  } else {
+    log("load error:", res.statusText);
+    return null;
+  }
+}
+export async function loadVideoDetail(id: string) {
+  const url = "https://api.guangsuapi.com/api.php/provide/vod/?ac=detail&ids=" + id;
+  const res = await fetch(url);
+  if (res.status == 200) {
+    const json = await res.json();
+    return json;
+  } else {
+    log("load error:", res.statusText);
+    return null;
+  }
+}
+export async function search(key_world: string) {
+  try {
+    const url = `https://api.guangsuapi.com/api.php/provide/vod/?ac=videolist&wd=${key_world}`;
+    const res = await fetch(url);
+    if (res.status == 200) {
+      const json = await res.json();
+      return json;
+    } else {
+      log("load error:", res.statusText);
+      return null;
+    }
+  } catch (error) {
+    log(error);
+    return null;
+  }
+}
+
+export async function searchAction(formData: FormData) {
+  log("formdata=", formData);
+  const name: string | undefined = formData.get("name")?.toString();
+  if (name == undefined || name?.trim() == "") {
+    return;
+  }
+  const path = "/?name=" + encodeURIComponent(name.trim());
+  log("search path:", path);
+  revalidatePath(path);
+  redirect(path);
+}
