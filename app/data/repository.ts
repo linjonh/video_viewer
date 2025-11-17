@@ -3,8 +3,8 @@ import { log } from "console";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-export async function loadVideoList(page: number = 1, limit: number = 80) {
-  const url = `https://api.guangsuapi.com/api.php/provide/vod/?ac=videolist&limit=${limit}&pg=${page}`;
+export async function loadVideoList({page = 1, limit = 80,clasTab=1}:{page?: number , limit?: number ,clasTab?:number}) {
+  const url = `https://api.guangsuapi.com/api.php/provide/vod/?ac=videolist&limit=${limit}&pg=${page}&t=${clasTab}`;
   log("url:", url);
   const res = await fetch(url);
   if (res.status == 200) {
@@ -53,4 +53,17 @@ export async function searchAction(formData: FormData) {
   log("search path:", path);
   revalidatePath(path);
   redirect(path);
+}
+
+export async function loadClassTabs() {
+  const url = `https://api.guangsuapi.com/api.php/provide/vod/`;
+  log("url:", url);
+  const res = await fetch(url);
+  if (res.status == 200) {
+    const json = await res.json();
+    return json;
+  } else {
+    log("load error:", res.statusText);
+    return null;
+  }
 }
