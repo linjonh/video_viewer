@@ -16,11 +16,7 @@ export default async function Home(props: { searchParams: { name: string } }) {
 
   if (data == null) {
     return <div className="flex flex-col min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <form action={action} className="my-10">
-        <input type="text" name="name" id="searchName" placeholder="请输入搜索片名" className="bg-gray-200 rounded-2xl h-8 w-50 cursor-default px-3" />
-        <button type="submit" className="bg-green-500 rounded-2xl px-4 py-1 text-white cursor-pointer ml-2">搜索</button>
-
-      </form>
+      <FormComponent/>
       <p>出错了，请重试</p>
     </div>
   }
@@ -32,11 +28,7 @@ export default async function Home(props: { searchParams: { name: string } }) {
   }
   return (
     <div className="flex flex-col min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <form action={action} className="my-10">
-        <input type="text" name="name" id="searchName" placeholder="请输入搜索片名" className="bg-gray-200 rounded-2xl h-8 w-50 cursor-default px-3" />
-        <button type="submit" className="bg-green-500 rounded-2xl px-4 py-1 text-white cursor-pointer ml-2">搜索</button>
-
-      </form>
+      <FormComponent/>
       <main className="flex flex-wrap justify-center lg:mx-80">
 
         {
@@ -53,4 +45,12 @@ export default async function Home(props: { searchParams: { name: string } }) {
       </main>
     </div>
   );
+
+  function FormComponent() {
+    return <form action={action} className="my-10">
+      <input type="text" name="name" id="searchName" placeholder="请输入搜索片名" className="bg-gray-200 rounded-2xl h-8 w-50 cursor-default px-3" />
+      <button type="submit" className="bg-green-500 rounded-2xl px-4 py-1 text-white cursor-pointer ml-2">搜索</button>
+
+    </form>;
+  }
 }
