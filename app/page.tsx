@@ -12,6 +12,8 @@ export default async function Home(props: { searchParams: { name: string } }) {
   } else {
     data = await loadVideoList()
   }
+  const action = searchAction.bind(null)
+
   if (data == null) {
     return <div className="flex flex-col min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <form action={action} className="my-10">
@@ -25,7 +27,6 @@ export default async function Home(props: { searchParams: { name: string } }) {
   log("data:", data, data.list.length)
   const totalpage = data.pagecount;
   const page = data.page;
-  const action = searchAction.bind(null)
   if (data.list.length == 0) {
     return <div className="flex flex-col items-center justify-center text-center h-full"><p>暂无数据</p></div>
   }
