@@ -2,6 +2,7 @@ import Image from "next/image";
 import { loadVideoList, search, searchAction } from "./data/repository";
 import { log } from "console";
 import Link from "next/link";
+import { VideoItem } from "./data/types";
 
 export default async function Home(props: { searchParams: { name: string } }) {
   const searchParams = await props.searchParams
@@ -32,7 +33,7 @@ export default async function Home(props: { searchParams: { name: string } }) {
       <main className="flex flex-wrap justify-center lg:mx-80">
 
         {
-          data.list.map((item) => (
+          data.list.map((item: VideoItem) => (
             <div key={item.vod_id} className="m-2">
               <Link href={`./detail?id=` + item.vod_id}>
                 <img src={item.vod_pic} alt={item.vod_name} className="w-60 h-90 object-cover rounded-2xl" width={50} height={70} />
