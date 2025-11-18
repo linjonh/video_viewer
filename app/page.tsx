@@ -26,8 +26,8 @@ export default async function Home(props: { searchParams: { name?: string, page?
     data = await loadVideoList({ page: searchParams.page ?? 1, clasTab: tab_typeId, serverUrl })
   }
   const tabs = await loadClassTabs(serverUrl);
-  const selectedTabName = tabs.class.find((s: any) => s.type_id == tab_typeId)?.type_name || "全部";
-  log("class size:", tabs.class.length,"tabIndex:",tab_typeId,"tabName",selectedTabName)
+  const selectedTabName = tabs?.class.find((s: any) => s.type_id == tab_typeId)?.type_name || "全部";
+  log("class size:", tabs?.class.length,"tabIndex:",tab_typeId,"tabName",selectedTabName)
   const action = searchAction.bind(null)
   const totalpage = data?.pagecount ?? 1;
   const page = data?.page ?? 1;

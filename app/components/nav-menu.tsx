@@ -123,7 +123,7 @@ export default function NavMenu({ tabs, tabIndex, selectedTabName, initialServer
             <nav className="bg-white/5 backdrop-blur-sm rounded-xl p-3 border border-white/10">
               <div className="text-xs text-gray-400 mb-2">选择分类</div>
               <ul className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-8 gap-2 text-white">
-                {tabs.class.map((item) => {
+                {tabs?.class.map((item) => {
                   const isActive = tabIndex == item.type_id;
                   if (
                     item.type_name === "伦理片" ||

@@ -61,6 +61,43 @@ const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(({ url, title, 
                     unlimited: true,
                 },
             });
+
+            // 添加自定义 PIP 按钮到控制栏
+            const video = playerRef.current.video;
+            if (document.pictureInPictureEnabled && !video.disablePictureInPicture) {
+                const controller = containerRef.current!.querySelector('.dplayer-controller');
+                if (controller) {
+                    // 创建 PIP 按钮
+                    const pipButton = document.createElement('button');
+                    pipButton.className = 'dplayer-icon dplayer-pip-icon';
+                    pipButton.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="5" width="18" height="14" rx="2" ry="2"/>
+                            <rect x="13" y="12" width="6" height="5" rx="1" ry="1"/>
+                        </svg>
+                    `;
+                    pipButton.title = '画中画';
+
+                    // 点击事件
+                    pipButton.addEventListener('click', async () => {
+                        try {
+                            if (document.pictureInPictureElement) {
+                                await document.exitPictureInPicture();
+                            } else {
+                                await video.requestPictureInPicture();
+                            }
+                        } catch (error) {
+                            console.error('PIP error:', error);
+                        }
+                    });
+
+                    // 插入到全屏按钮之前
+                    const fullscreenButton = controller.querySelector('.dplayer-full-icon');
+                    if (fullscreenButton && fullscreenButton.parentNode) {
+                        fullscreenButton.parentNode.insertBefore(pipButton, fullscreenButton);
+                    }
+                }
+            }
         };
 
         initPlayer();
@@ -105,8 +142,8 @@ const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(({ url, title, 
     }
 
     return (
-        <div className="w-full aspect-video bg-black rounded-xl shadow-2xl border border-white/10" style={{ position: 'relative' }}>
-            <div ref={containerRef} className="w-full h-full rounded-xl overflow-hidden" />
+        <div className="w-full aspect-video bg-black rounded-lg overflow-hidden" style={{ position: 'relative' }}>
+            <div ref={containerRef} className="w-full h-full" />
         </div>
     );
 });

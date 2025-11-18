@@ -94,3 +94,25 @@ body {
 .animate-fadeIn {
   animation: fadeIn 0.2s ease-out;
 }
+
+/* DPlayer 自定义 PIP 按钮样式 */
+.dplayer-pip-icon {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.dplayer-pip-icon svg {
+  color: #fff;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.dplayer-pip-icon:hover svg {
+  opacity: 1;
+}

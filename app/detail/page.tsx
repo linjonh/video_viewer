@@ -5,6 +5,7 @@ import ScrollToTop from "../components/scroll-to-top";
 import { cookies } from "next/headers";
 import { resourceServers } from "../data/types";
 import DetailContent from "../components/detail-content";
+import Link from "next/link";
 
 // Function to strip HTML tags from text
 function stripHtmlTags(html: string): string {
@@ -31,6 +32,28 @@ export default async function detailPage(props: { searchParams: { id: string } }
     const serverUrl = selectedServer.url;
 
     const data = await loadVideoDetail(searchParams.id, serverUrl)
+
+    // 如果数据加载失败，显示错误页面
+    if (data == null || !data.list || data.list.length === 0) {
+        return (
+            <div className="min-h-screen text-white flex items-center justify-center p-4">
+                <div className="max-w-md w-full bg-white/5 backdrop-blur-sm rounded-xl p-8 border border-white/10 text-center">
+                    <svg className="w-20 h-20 mx-auto mb-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <h2 className="text-2xl font-bold mb-2">加载失败</h2>
+                    <p className="text-gray-400 mb-6">无法加载视频详情，请稍后重试</p>
+                    <Link
+                        href="/"
+                        className="inline-block bg-linear-to-r from-green-600 to-teal-600 hover:from-green-500 hover:to-teal-500 text-white font-medium px-6 py-3 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
+                    >
+                        返回首页
+                    </Link>
+                </div>
+            </div>
+        )
+    }
+
     const info = data.list[0];
     const urls: string[] = info.vod_play_url.split("$$$")
 
@@ -38,12 +61,12 @@ export default async function detailPage(props: { searchParams: { id: string } }
     const cleanContent = stripHtmlTags(info.vod_content || "")
 
     // 准备播放源数据
-    const playSources = urls.map((item, index) => {
+    const playSources = urls.reverse().map((item, index) => {
         const episodes = item.split("#").filter(e => e.trim())
-        const sourceName = info.vod_play_from.split("$$$")[index]
+        // const sourceName = info.vod_play_from.split("$$$")[index]
 
         return {
-            name: sourceName || `播放源 ${index + 1}`,
+            name: `播放源 ${index + 1}`,
             episodes: episodes.map((es: string) => {
                 const array = es.split("$")
                 return {
