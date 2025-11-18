@@ -110,14 +110,14 @@ export default async function detailPage(props: { searchParams: { id: string } }
                                                 <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
                                                 {sourceName || `播放源 ${index + 1}`}
                                             </h3>
-                                            <div className="flex flex-wrap gap-2">
+                                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2">
                                                 {episodes.map((es: string) => {
                                                     const array = es.split("$")
                                                     if (!array[0] || !array[1]) return null
 
                                                     return (
                                                         <a
-                                                            className="px-3 sm:px-4 py-2 bg-linear-to-r from-green-600 to-teal-600 hover:from-green-500 hover:to-teal-500 rounded-lg text-white text-xs sm:text-sm font-medium transition-all duration-200 shadow-md hover:shadow-xl hover:scale-105 active:scale-95 border border-green-400/30"
+                                                            className="px-3 sm:px-4 py-2 bg-linear-to-r from-green-600 to-teal-600 hover:from-green-500 hover:to-teal-500 rounded-lg text-white text-xs sm:text-sm font-medium transition-all duration-200 shadow-md hover:shadow-xl hover:scale-105 active:scale-95 border border-green-400/30 text-center flex items-center justify-center"
                                                             href={array[1]}
                                                             key={array[1]}
                                                             target="_blank"

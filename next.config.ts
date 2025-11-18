@@ -14,6 +14,7 @@ const nextConfig: NextConfig = {
       "shandianpic.vip",
       "xinlangtupian.com",
       "img.bdzyimg1.com",
+      "pic.lzzypic.com",
     ],
   },
 };

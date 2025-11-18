@@ -4,7 +4,6 @@ import { log } from "console";
 import Link from "next/link";
 import { VideoItem, resourceServers } from "./data/types";
 import Pagination from "./components/pagination";
-import ServerSelector from "./components/server-selector";
 import NavMenu from "./components/nav-menu";
 import { cookies } from "next/headers";
 
@@ -35,9 +34,8 @@ export default async function Home(props: { searchParams: { name?: string, page?
 
   return (
     <div className="flex flex-col min-h-screen font-sans text-white">
-      <NavMenu tabs={tabs} tabIndex={tab_typeId} selectedTabName={selectedTabName} />
+      <NavMenu tabs={tabs} tabIndex={tab_typeId} selectedTabName={selectedTabName} initialServerId={selectedServerId} />
       <div className="w-full flex flex-col items-center px-4">
-        <ServerSelector initialServerId={selectedServerId} />
         <FormComponent searchName={searchParams.name} />
         {data == null && (
           <div className="mt-20 text-center">
