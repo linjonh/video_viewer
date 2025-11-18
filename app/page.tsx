@@ -5,6 +5,7 @@ import Link from "next/link";
 import { VideoItem, resourceServers } from "./data/types";
 import Pagination from "./components/pagination";
 import ServerSelector from "./components/server-selector";
+import NavMenu from "./components/nav-menu";
 import { cookies } from "next/headers";
 
 export default async function Home(props: { searchParams: { name?: string, page?: number, t?: number } }) {
@@ -25,7 +26,8 @@ export default async function Home(props: { searchParams: { name?: string, page?
     data = await loadVideoList({ page: searchParams.page ?? 1, clasTab: tab_typeId, serverUrl })
   }
   const tabs = await loadClassTabs(serverUrl);
-  log("class size:", tabs.class.length,"tabIndex:",tab_typeId,"tabName",getTabName())
+  const selectedTabName = tabs.class.find((s: any) => s.type_id == tab_typeId)?.type_name || "全部";
+  log("class size:", tabs.class.length,"tabIndex:",tab_typeId,"tabName",selectedTabName)
   const action = searchAction.bind(null)
   const totalpage = data?.pagecount ?? 1;
   const page = data?.page ?? 1;
@@ -33,8 +35,7 @@ export default async function Home(props: { searchParams: { name?: string, page?
 
   return (
     <div className="flex flex-col min-h-screen font-sans text-white">
-      {/* bg-linear-to-r from-green-900/95 to-teal-900/95 */}
-      <NavTab tabs={tabs} tabIndex={tab_typeId} className="sticky top-0  bg-black/30 backdrop-blur-md w-full p-3 sm:p-5 shadow-xl border-b border-white/10 z-50" />
+      <NavMenu tabs={tabs} tabIndex={tab_typeId} selectedTabName={selectedTabName} />
       <div className="w-full flex flex-col items-center px-4">
         <ServerSelector initialServerId={selectedServerId} />
         <FormComponent searchName={searchParams.name} />
@@ -45,7 +46,7 @@ export default async function Home(props: { searchParams: { name?: string, page?
         )}
         {data != null && (data.list?.length == 0) ? (
           <div className="mt-20 text-center">
-            <p className="text-gray-400 text-lg">{getTabName()}分类，暂无数据</p>
+            <p className="text-gray-400 text-lg">{selectedTabName}分类，暂无数据</p>
           </div>
         ) : (
           <MainContent data={data} totalpage={totalpage} />
@@ -53,10 +54,6 @@ export default async function Home(props: { searchParams: { name?: string, page?
       </div>
     </div>
   );
-
-  function getTabName(): any {
-    return tabs.class.find((s: any) => s.type_id == tab_typeId).type_name;
-  }
 
   function FormComponent({ searchName }: { searchName?: string }) {
     return (
@@ -80,32 +77,6 @@ export default async function Home(props: { searchParams: { name?: string, page?
       </form>
     );
   }
-}
-
-function NavTab({ tabs, tabIndex, className }: { tabs: any, tabIndex: number, className: string }) {
-  return (
-    <nav className={className}>
-      <ul className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-8 gap-2 sm:gap-3 max-w-screen-2xl mx-auto text-white">
-        {tabs.class.map((item: any) => {
-          const isActive = tabIndex == item.type_id;
-          if (item.type_name === '伦理片' || item.type_name.includes('伦理') || item.type_name.includes('三级')) return null;
-          return (
-            <li
-              className={`px-1 sm:px-2 py-1.5 rounded-lg transition-all duration-200 text-xs sm:text-sm md:text-base whitespace-nowrap text-center ${isActive
-                ? "bg-white/20 font-bold text-green-300 shadow-lg scale-105"
-                : "bg-white/5 hover:bg-white/15 hover:scale-105"
-                } active:scale-95`}
-              key={item.type_id}
-            >
-              <Link href={`./?t=` + item.type_id} className="block">
-                {item.type_name}
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
-    </nav>
-  );
 }
 
 function MainContent({ data, totalpage }: { data: any, totalpage: number }) {
