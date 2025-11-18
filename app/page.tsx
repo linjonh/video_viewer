@@ -17,10 +17,10 @@ export default async function Home(props: { searchParams: { name?: string, page?
   const selectedServerId = cookieStore.get("selected_server")?.value || resourceServers[0].id;
   const selectedServer = resourceServers.find(s => s.id === selectedServerId) || resourceServers[0];
   const serverUrl = selectedServer.url;
-  log("selectedServerId:", selectedServerId, "serverUrl:", serverUrl);
+  // log("selectedServerId:", selectedServerId, "serverUrl:", serverUrl);
   let data;
   if (searchParams != null && searchParams.name != null) {
-    log("searchParams:", searchParams)
+    // log("searchParams:", searchParams)
     data = await search(searchParams.name, serverUrl)
   } else {
     data = await loadVideoList({ page: searchParams.page ?? 1, clasTab: tab_typeId, serverUrl })
