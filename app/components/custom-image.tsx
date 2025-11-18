@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface CustomImageProps {
     src: string;
@@ -10,37 +10,27 @@ interface CustomImageProps {
 }
 
 export default function CustomImage({ src, alt, className = '', loading = 'lazy' }: CustomImageProps) {
-    const [imageState, setImageState] = useState<'loading' | 'loaded' | 'error'>('loading');
+    const [imageState, setImageState] = useState<'loading' | 'loaded' | 'error'>('loaded');
     const [imageSrc, setImageSrc] = useState<string>(src);
+    const imgRef = useRef<HTMLImageElement>(null);
 
-    useEffect(() => {
-        // 如果 src 为空或无效，直接设置为错误状态
-        if (!src || src.trim() === '') {
-            setImageState('error');
-            return;
-        }
+    // useEffect(() => {
+    //     // 如果 src 为空或无效，直接设置为错误状态
+    //     if (!src || src.trim() === '') {
+    //         setImageState('error');
+    //         return;
+    //     }
 
-        setImageState('loading');
-        setImageSrc(src);
+    //     // 重置状态
+    //     setImageSrc(src);
 
-        // 对于 eager 加载的图片，使用 Image 对象预加载以确保并行加载
-        if (loading === 'eager') {
-            const img = new Image();
-            img.src = src;
-
-            // 预加载完成后更新状态
-            if (img.complete) {
-                setImageState('loaded');
-            } else {
-                img.onload = () => {
-                    setImageState('loaded');
-                };
-                img.onerror = () => {
-                    setImageState('error');
-                };
-            }
-        }
-    }, [src, loading]);
+    //     // 检查图片是否已经在浏览器缓存中（包括 ServiceWorker 缓存）
+    //     if (imgRef.current?.complete && imgRef.current?.naturalHeight !== 0) {
+    //         setImageState('loaded');
+    //     } else {
+    //         setImageState('loading');
+    //     }
+    // }, [src]);
 
     const handleLoad = () => {
         setImageState('loaded');
@@ -53,14 +43,14 @@ export default function CustomImage({ src, alt, className = '', loading = 'lazy'
     return (
         <div className={`relative ${className}`}>
             {/* 加载中占位符 */}
-            {imageState === 'loading' && (
+            {/* {imageState === 'loading' && (
                 <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
                     <div className="flex flex-col items-center gap-3">
                         <div className="w-12 h-12 border-4 border-green-500/30 border-t-green-500 rounded-full animate-spin" />
                         <p className="text-gray-400 text-sm">加载中...</p>
                     </div>
                 </div>
-            )}
+            )} */}
 
             {/* 错误占位符 */}
             {imageState === 'error' && (
@@ -77,14 +67,15 @@ export default function CustomImage({ src, alt, className = '', loading = 'lazy'
             {/* 实际图片 - 只在有效 src 时渲染 */}
             {imageSrc && imageSrc.trim() !== '' && (
                 <img
+                    ref={imgRef}
                     src={imageSrc}
                     alt={alt}
                     className={`${className} ${imageState === 'loaded' ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}
-                    loading={loading}
+                    // loading={loading}
                     onLoad={handleLoad}
                     onError={handleError}
                     decoding="async"
-                    fetchPriority={loading === 'eager' ? 'high' : 'auto'}
+                    // fetchPriority={loading === 'eager' ? 'high' : 'auto'}
                 />
             )}
         </div>
