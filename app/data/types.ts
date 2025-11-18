@@ -22,4 +22,21 @@ export interface VideoListResponse {
   total: number;
   list: VideoItem[];
 }
+
+export interface ResourceServer {
+  id: string;
+  name: string;
+  url: string;
+}
+
+export const resourceServers: ResourceServer[] = [
+  { id: "wolongzyw", name: "卧龙资源(切)", url: "https://collect.wolongzyw.com/api.php/provide/vod/" },
+  { id: "lziapi", name: "量子资源(切)", url: "http://cj.lziapi.com/api.php/provide/vod/" },
+  { id: "apiyhzy", name: "樱花资源(切)", url: "https://m3u8.apiyhzy.com/api.php/provide/vod/" },
+  { id: "sdzyapi", name: "闪电资源(切)", url: "http://sdzyapi.com/api.php/provide/vod/" },
+  { id: "guangsuapi", name: "光速资源(切)", url: "https://api.guangsuapi.com/api.php/provide/vod/" },
+  { id: "xinlangapi", name: "新浪资源(切)", url: "http://api.xinlangapi.com/xinlangapi.php/provide/vod/" },
+  { id: "apibdzy", name: "百度资源(切)", url: "https://api.apibdzy.com/api.php/provide/vod/" },
+];
+
 export const tvResourceUrl = "https://raw.githubusercontent.com/xfcjp/xfcjp.github.io/fa89f0c64e256fd8581ccf0ca8520b0d52ca2f25/maoTV01.json";

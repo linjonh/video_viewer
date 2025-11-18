@@ -2,14 +2,40 @@ import { log } from "console"
 import { loadVideoDetail } from "../data/repository"
 import Image from "next/image";
 import BackButton from "../components/back-button";
+import { cookies } from "next/headers";
+import { resourceServers } from "../data/types";
+
+// Function to strip HTML tags from text
+function stripHtmlTags(html: string): string {
+    if (!html) return "";
+    return html
+        .replace(/<[^>]*>/g, '') // Remove HTML tags
+        .replace(/&nbsp;/g, ' ') // Replace &nbsp; with space
+        .replace(/&lt;/g, '<')   // Replace &lt; with <
+        .replace(/&gt;/g, '>')   // Replace &gt; with >
+        .replace(/&amp;/g, '&')  // Replace &amp; with &
+        .replace(/&quot;/g, '"') // Replace &quot; with "
+        .replace(/&#39;/g, "'")  // Replace &#39; with '
+        .trim();
+}
 
 export default async function detailPage(props: { searchParams: { id: string } }) {
     const searchParams = await props.searchParams
     log("searchParams=>", searchParams)
-    const data = await loadVideoDetail(searchParams.id)
+
+    // Get selected server from cookie
+    const cookieStore = await cookies();
+    const selectedServerId = cookieStore.get("selected_server")?.value || resourceServers[0].id;
+    const selectedServer = resourceServers.find(s => s.id === selectedServerId) || resourceServers[0];
+    const serverUrl = selectedServer.url;
+
+    const data = await loadVideoDetail(searchParams.id, serverUrl)
     const info = data.list[0];
     // log(info)
     const urls: string[] = info.vod_play_url.split("$$$")
+
+    // Clean HTML from content
+    const cleanContent = stripHtmlTags(info.vod_content || "")
 
     return (
         <div className="min-h-screen text-white p-4 sm:p-6 lg:p-10">
@@ -36,7 +62,7 @@ export default async function detailPage(props: { searchParams: { id: string } }
                     <div className="flex-1 flex flex-col gap-6">
                         {/* 标题和副标题 */}
                         <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/10">
-                            <h1 className="text-3xl sm:text-4xl font-bold mb-2 bg-linear-to-r from-yellow-300 to-orange-400 bg-clip-text text-transparent">
+                            <h1 className="text-3xl sm:text-4xl font-bold mb-2 bg-linear-to-r from-green-300 to-teal-400 bg-clip-text text-transparent">
                                 {info.vod_name}
                             </h1>
                             {info.vod_sub && <p className="text-gray-300 text-lg">{info.vod_sub}</p>}
@@ -45,7 +71,7 @@ export default async function detailPage(props: { searchParams: { id: string } }
                         {/* 基本信息 */}
                         <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/10">
                             <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                                <span className="w-1 h-6 bg-linear-to-b from-blue-400 to-cyan-400 rounded-full"></span>
+                                <span className="w-1 h-6 bg-linear-to-b from-green-400 to-teal-400 rounded-full"></span>
                                 基本信息
                             </h2>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -57,13 +83,13 @@ export default async function detailPage(props: { searchParams: { id: string } }
                         </div>
 
                         {/* 剧情简介 */}
-                        {info.vod_content && (
+                        {cleanContent && (
                             <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/10">
                                 <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
                                     <span className="w-1 h-6 bg-linear-to-b from-purple-400 to-pink-400 rounded-full"></span>
                                     剧情简介
                                 </h2>
-                                <p className="text-gray-200 leading-relaxed text-justify">{info.vod_content}</p>
+                                <p className="text-gray-200 leading-relaxed text-justify">{cleanContent}</p>
                             </div>
                         )}
 
@@ -80,8 +106,8 @@ export default async function detailPage(props: { searchParams: { id: string } }
 
                                     return (
                                         <div key={item} className="space-y-3 p-4 bg-white/5 rounded-xl border border-white/10">
-                                            <h3 className="text-base sm:text-lg font-semibold text-yellow-300 flex items-center gap-2">
-                                                <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></span>
+                                            <h3 className="text-base sm:text-lg font-semibold text-green-300 flex items-center gap-2">
+                                                <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
                                                 {sourceName || `播放源 ${index + 1}`}
                                             </h3>
                                             <div className="flex flex-wrap gap-2">
@@ -91,7 +117,7 @@ export default async function detailPage(props: { searchParams: { id: string } }
 
                                                     return (
                                                         <a
-                                                            className="px-3 sm:px-4 py-2 bg-linear-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 rounded-lg text-white text-xs sm:text-sm font-medium transition-all duration-200 shadow-md hover:shadow-xl hover:scale-105 active:scale-95 border border-blue-400/30"
+                                                            className="px-3 sm:px-4 py-2 bg-linear-to-r from-green-600 to-teal-600 hover:from-green-500 hover:to-teal-500 rounded-lg text-white text-xs sm:text-sm font-medium transition-all duration-200 shadow-md hover:shadow-xl hover:scale-105 active:scale-95 border border-green-400/30"
                                                             href={array[1]}
                                                             key={array[1]}
                                                             target="_blank"

@@ -4,9 +4,10 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { tvResourceUrl } from "./types";
 
-export async function loadVideoList({ page = 1, limit = 80, clasTab = 1 }: { page?: number; limit?: number; clasTab?: number }) {
+export async function loadVideoList({ page = 1, limit = 80, clasTab = 1, serverUrl }: { page?: number; limit?: number; clasTab?: number; serverUrl?: string }) {
   try {
-    const url = `https://api.guangsuapi.com/api.php/provide/vod/?ac=videolist&limit=${limit}&pg=${page}&t=${clasTab}`;
+    const baseUrl = serverUrl || "https://api.guangsuapi.com/api.php/provide/vod/";
+    const url = `${baseUrl}?ac=videolist&limit=${limit}&pg=${page}&t=${clasTab}`;
     log("url:", url);
     const res = await fetch(url);
     if (res.status == 200) {
@@ -21,9 +22,10 @@ export async function loadVideoList({ page = 1, limit = 80, clasTab = 1 }: { pag
     return null;
   }
 }
-export async function loadVideoDetail(id: string) {
+export async function loadVideoDetail(id: string, serverUrl?: string) {
   try {
-    const url = "https://api.guangsuapi.com/api.php/provide/vod/?ac=detail&ids=" + id;
+    const baseUrl = serverUrl || "https://api.guangsuapi.com/api.php/provide/vod/";
+    const url = `${baseUrl}?ac=detail&ids=${id}`;
     const res = await fetch(url);
     if (res.status == 200) {
       const json = await res.json();
@@ -37,9 +39,10 @@ export async function loadVideoDetail(id: string) {
     return null;
   }
 }
-export async function search(key_world: string) {
+export async function search(key_world: string, serverUrl?: string) {
   try {
-    const url = `https://api.guangsuapi.com/api.php/provide/vod/?ac=videolist&wd=${key_world}`;
+    const baseUrl = serverUrl || "https://api.guangsuapi.com/api.php/provide/vod/";
+    const url = `${baseUrl}?ac=videolist&wd=${key_world}`;
     const res = await fetch(url);
     if (res.status == 200) {
       const json = await res.json();
@@ -66,9 +69,9 @@ export async function searchAction(formData: FormData) {
   redirect(path);
 }
 
-export async function loadClassTabs() {
+export async function loadClassTabs(serverUrl?: string) {
   try {
-    const url = `https://api.guangsuapi.com/api.php/provide/vod/`;
+    const url = serverUrl || `https://api.guangsuapi.com/api.php/provide/vod/`;
     log("url:", url);
     const res = await fetch(url);
     if (res.status == 200) {
