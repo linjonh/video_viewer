@@ -14,9 +14,33 @@ export default function CustomImage({ src, alt, className = '', loading = 'lazy'
     const [imageSrc, setImageSrc] = useState<string>(src);
 
     useEffect(() => {
+        // 如果 src 为空或无效，直接设置为错误状态
+        if (!src || src.trim() === '') {
+            setImageState('error');
+            return;
+        }
+
         setImageState('loading');
         setImageSrc(src);
-    }, [src]);
+
+        // 对于 eager 加载的图片，使用 Image 对象预加载以确保并行加载
+        if (loading === 'eager') {
+            const img = new Image();
+            img.src = src;
+
+            // 预加载完成后更新状态
+            if (img.complete) {
+                setImageState('loaded');
+            } else {
+                img.onload = () => {
+                    setImageState('loaded');
+                };
+                img.onerror = () => {
+                    setImageState('error');
+                };
+            }
+        }
+    }, [src, loading]);
 
     const handleLoad = () => {
         setImageState('loaded');
@@ -50,15 +74,19 @@ export default function CustomImage({ src, alt, className = '', loading = 'lazy'
                 </div>
             )}
 
-            {/* 实际图片 */}
-            <img
-                src={imageSrc}
-                alt={alt}
-                className={`${className} ${imageState === 'loaded' ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}
-                loading={loading}
-                onLoad={handleLoad}
-                onError={handleError}
-            />
+            {/* 实际图片 - 只在有效 src 时渲染 */}
+            {imageSrc && imageSrc.trim() !== '' && (
+                <img
+                    src={imageSrc}
+                    alt={alt}
+                    className={`${className} ${imageState === 'loaded' ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}
+                    loading={loading}
+                    onLoad={handleLoad}
+                    onError={handleError}
+                    decoding="async"
+                    fetchPriority={loading === 'eager' ? 'high' : 'auto'}
+                />
+            )}
         </div>
     );
 }

@@ -30,12 +30,12 @@ export interface ResourceServer {
 }
 
 export const resourceServers: ResourceServer[] = [
+  { id: "xinlangapi", name: "新浪资源(切)", url: "http://api.xinlangapi.com/xinlangapi.php/provide/vod/" },
   { id: "wolongzyw", name: "卧龙资源(切)", url: "https://collect.wolongzyw.com/api.php/provide/vod/" },
   { id: "lziapi", name: "量子资源(切)", url: "http://cj.lziapi.com/api.php/provide/vod/" },
   { id: "apiyhzy", name: "樱花资源(切)", url: "https://m3u8.apiyhzy.com/api.php/provide/vod/" },
   { id: "sdzyapi", name: "闪电资源(切)", url: "http://sdzyapi.com/api.php/provide/vod/" },
   { id: "guangsuapi", name: "光速资源(切)", url: "https://api.guangsuapi.com/api.php/provide/vod/" },
-  { id: "xinlangapi", name: "新浪资源(切)", url: "http://api.xinlangapi.com/xinlangapi.php/provide/vod/" },
   { id: "apibdzy", name: "百度资源(切)", url: "https://api.apibdzy.com/api.php/provide/vod/" },
 ];
 

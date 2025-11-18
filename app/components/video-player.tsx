@@ -38,10 +38,10 @@ const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(({ url, title, 
                 container: containerRef.current!,
                 video: {
                     url: url,
-                    pic: pic,
+                    // pic: pic,
                     type: 'auto',
                 },
-                autoplay: false,
+                autoplay: true,
                 theme: '#10b981', // 绿色主题，与网站配色一致
                 loop: false,
                 lang: 'zh-cn',

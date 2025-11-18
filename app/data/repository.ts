@@ -8,7 +8,7 @@ export async function loadVideoList({ page = 1, limit = 80, clasTab = 1, serverU
   try {
     const baseUrl = serverUrl || "https://api.guangsuapi.com/api.php/provide/vod/";
     const url = `${baseUrl}?ac=videolist&limit=${limit}&pg=${page}&t=${clasTab}`;
-    // log("url:", url);
+    log("url:", url);
     const res = await fetch(url);
     if (res.status == 200) {
       const json = await res.json();
