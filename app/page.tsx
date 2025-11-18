@@ -5,6 +5,7 @@ import Link from "next/link";
 import { VideoItem, resourceServers } from "./data/types";
 import Pagination from "./components/pagination";
 import NavMenu from "./components/nav-menu";
+import ScrollToTop from "./components/scroll-to-top";
 import { cookies } from "next/headers";
 
 export default async function Home(props: { searchParams: { name?: string, page?: number, t?: number } }) {
@@ -50,6 +51,7 @@ export default async function Home(props: { searchParams: { name?: string, page?
           <MainContent data={data} totalpage={totalpage} />
         )}
       </div>
+      <ScrollToTop />
     </div>
   );
 
