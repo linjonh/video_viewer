@@ -23,4 +23,58 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+.background-container {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  background-image: url('https://bing.ee123.net/img/rand');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+.background-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.75) 0%, rgba(0, 40, 70, 0.7) 50%, rgba(0, 0, 0, 0.75) 100%);
+  z-index: 1;
+}
+
+.content-wrapper {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+}
+
+/* 自定义滚动条样式 */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #3b82f6 0%, #06b6d4 100%);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #2563eb 0%, #0891b2 100%);
+}
+
+/* 文字选择颜色 */
+::selection {
+  background-color: rgba(59, 130, 246, 0.3);
+  color: #fff;
 }

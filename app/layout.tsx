@@ -27,8 +27,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-         <SWRegister />
-        {children}
+        <SWRegister />
+        <div className="background-container">
+          <div className="background-overlay"></div>
+          <div className="content-wrapper">
+            {children}
+          </div>
+        </div>
       </body>
     </html>
   );

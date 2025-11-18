@@ -22,3 +22,4 @@ export interface VideoListResponse {
   total: number;
   list: VideoItem[];
 }
+export const tvResourceUrl = "https://raw.githubusercontent.com/xfcjp/xfcjp.github.io/fa89f0c64e256fd8581ccf0ca8520b0d52ca2f25/maoTV01.json";

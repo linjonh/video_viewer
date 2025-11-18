@@ -2,27 +2,38 @@
 import { log } from "console";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { tvResourceUrl } from "./types";
 
-export async function loadVideoList({page = 1, limit = 80,clasTab=1}:{page?: number , limit?: number ,clasTab?:number}) {
-  const url = `https://api.guangsuapi.com/api.php/provide/vod/?ac=videolist&limit=${limit}&pg=${page}&t=${clasTab}`;
-  log("url:", url);
-  const res = await fetch(url);
-  if (res.status == 200) {
-    const json = await res.json();
-    return json;
-  } else {
-    log("load error:", res.statusText);
+export async function loadVideoList({ page = 1, limit = 80, clasTab = 1 }: { page?: number; limit?: number; clasTab?: number }) {
+  try {
+    const url = `https://api.guangsuapi.com/api.php/provide/vod/?ac=videolist&limit=${limit}&pg=${page}&t=${clasTab}`;
+    log("url:", url);
+    const res = await fetch(url);
+    if (res.status == 200) {
+      const json = await res.json();
+      return json;
+    } else {
+      log("load error:", res.statusText);
+      return null;
+    }
+  } catch (error) {
+    log(error);
     return null;
   }
 }
 export async function loadVideoDetail(id: string) {
-  const url = "https://api.guangsuapi.com/api.php/provide/vod/?ac=detail&ids=" + id;
-  const res = await fetch(url);
-  if (res.status == 200) {
-    const json = await res.json();
-    return json;
-  } else {
-    log("load error:", res.statusText);
+  try {
+    const url = "https://api.guangsuapi.com/api.php/provide/vod/?ac=detail&ids=" + id;
+    const res = await fetch(url);
+    if (res.status == 200) {
+      const json = await res.json();
+      return json;
+    } else {
+      log("load error:", res.statusText);
+      return null;
+    }
+  } catch (error) {
+    log(error);
     return null;
   }
 }
@@ -56,14 +67,40 @@ export async function searchAction(formData: FormData) {
 }
 
 export async function loadClassTabs() {
-  const url = `https://api.guangsuapi.com/api.php/provide/vod/`;
-  log("url:", url);
-  const res = await fetch(url);
-  if (res.status == 200) {
-    const json = await res.json();
-    return json;
-  } else {
-    log("load error:", res.statusText);
+  try {
+    const url = `https://api.guangsuapi.com/api.php/provide/vod/`;
+    log("url:", url);
+    const res = await fetch(url);
+    if (res.status == 200) {
+      const json = await res.json();
+      return json;
+    } else {
+      log("load error:", res.statusText);
+      return null;
+    }
+  } catch (error) {
+    log(error);
     return null;
   }
+}
+
+export async function fetchResource(url: string) {
+  try {
+    log("url:", url);
+    const res = await fetch(url);
+    if (res.status == 200) {
+      const json = await res.json();
+      return json;
+    } else {
+      log("load error:", res.statusText);
+      return null;
+    }
+  } catch (error) {
+    log(error);
+    return null;
+  }
+}
+
+export async function getTvResource() {
+  return await fetchResource(tvResourceUrl);
 }
