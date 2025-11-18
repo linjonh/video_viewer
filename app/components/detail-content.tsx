@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import VideoPlayer from './video-player';
-import Image from 'next/image';
+import CustomImage from './custom-image';
 
 interface Episode {
     name: string;
@@ -53,14 +53,13 @@ export default function DetailContent({ info, playSources }: DetailContentProps)
                         />
                     ) : (
                         <div className="w-full aspect-video bg-black rounded-lg overflow-hidden relative">
-                            <Image
+                            <CustomImage
                                 src={info.vod_pic}
                                 alt={info.vod_name}
                                 className="w-full h-full object-cover"
-                                width={1280}
-                                height={720}
+                                loading="lazy"
                             />
-                            <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+                            <div className="absolute inset-0 flex items-center justify-center bg-black/50 pointer-events-none">
                                 <div className="text-center">
                                     <svg className="w-20 h-20 mx-auto mb-4 text-green-400" fill="currentColor" viewBox="0 0 20 20">
                                         <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
@@ -118,12 +117,11 @@ export default function DetailContent({ info, playSources }: DetailContentProps)
                     {/* 海报 */}
                     <div className="md:col-span-3">
                         <div className="aspect-2/3 w-full overflow-hidden rounded-lg">
-                            <Image
+                            <CustomImage
                                 src={info.vod_pic}
                                 alt={info.vod_name}
                                 className="w-full h-full object-cover"
-                                width={300}
-                                height={450}
+                                loading="lazy"
                             />
                         </div>
                     </div>
