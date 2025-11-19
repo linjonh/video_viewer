@@ -4,6 +4,7 @@ import "./globals.css";
 import SWRegister from "./components/sw-register";
 import Footer from "./components/footer";
 import LoadingBar from "./components/loading-bar";
+import { Suspense } from "react";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -33,7 +34,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <SWRegister />
-        <LoadingBar />
+        <Suspense fallback={null}>
+          <LoadingBar />
+        </Suspense>
         <div className="background-container">
           <div className="background-overlay"></div>
           <div className="content-wrapper flex flex-col min-h-screen">

@@ -9,8 +9,10 @@ export default function LoadingBar() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Show loading bar immediately when navigation starts
-    setLoading(true);
+    // Use a microtask to avoid synchronous state update
+    Promise.resolve().then(() => {
+      setLoading(true);
+    });
 
     // Hide loading bar after a short delay to ensure content is rendered
     const timer = setTimeout(() => {

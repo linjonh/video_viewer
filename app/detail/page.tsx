@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import { log } from "console";
 import ScrollToTop from "../components/scroll-to-top";
 import { cookies } from "next/headers";
 import { resourceServers } from "../data/types";
@@ -8,7 +7,7 @@ import { DetailSkeleton } from "../components/skeleton";
 
 export default async function detailPage(props: { searchParams: { id: string } }) {
     const searchParams = await props.searchParams;
-    log("searchParams=>", searchParams);
+    console.log("searchParams=>", searchParams);
 
     // Get selected server from cookie
     const cookieStore = await cookies();
