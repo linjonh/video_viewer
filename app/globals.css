@@ -95,6 +95,49 @@ body {
   animation: fadeIn 0.2s ease-out;
 }
 
+/* DPlayer 自定义样式 */
+/* 修复全屏时右侧白边问题 */
+.video-player-wrapper video {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain;
+}
+
+.video-player-wrapper .dplayer-video-wrap {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* 确保全屏时没有多余的边距 */
+.dplayer-fulled {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* 确保控制条在全屏和非全屏时都能正常显示 */
+.dplayer-controller {
+  opacity: 0;
+  transition: opacity 0.3s ease !important;
+}
+
+.dplayer-controller-show,
+.dplayer:hover .dplayer-controller,
+.dplayer-controller:hover {
+  opacity: 1 !important;
+}
+
+/* 全屏时确保控制条可见 */
+.dplayer-fulled .dplayer-controller {
+  opacity: 0;
+  transition: opacity 0.3s ease !important;
+}
+
+.dplayer-fulled:hover .dplayer-controller,
+.dplayer-fulled .dplayer-controller-show,
+.dplayer-fulled .dplayer-controller:hover {
+  opacity: 1 !important;
+}
+
 /* DPlayer 自定义 PIP 按钮样式 */
 .dplayer-pip-icon {
   background: transparent;

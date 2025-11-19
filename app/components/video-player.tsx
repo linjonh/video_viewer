@@ -142,8 +142,8 @@ const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(({ url, title, 
     }
 
     return (
-        <div className="w-full aspect-video bg-black rounded-lg overflow-hidden" style={{ position: 'relative' }}>
-            <div ref={containerRef} className="w-full h-full" />
+        <div className="video-player-wrapper w-full aspect-video bg-black rounded-lg overflow-hidden" style={{ position: 'relative' }}>
+            <div ref={containerRef} className="w-full h-full" style={{ lineHeight: 0 }} />
         </div>
     );
 });
