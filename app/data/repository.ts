@@ -84,7 +84,7 @@ export async function searchAction(formData: FormData) {
 export async function loadClassTabs(serverUrl?: string) {
   try {
     const url = serverUrl || `https://api.guangsuapi.com/api.php/provide/vod/`;
-    log("url:", url);
+    // log("url:", url);
     // Cache for 1 hour - class tabs don't change frequently
     const res = await fetch(url, {
       next: { revalidate: 3600 }
@@ -104,7 +104,7 @@ export async function loadClassTabs(serverUrl?: string) {
 
 export async function fetchResource(url: string) {
   try {
-    log("url:", url);
+    // log("url:", url);
     const res = await fetch(url);
     if (res.status == 200) {
       const json = await res.json();

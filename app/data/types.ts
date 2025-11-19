@@ -11,6 +11,7 @@ export interface VideoItem {
   vod_director?: string;
   vod_content?: string;
   vod_play_url?: string;
+  type_name?: string;
 }
 
 export interface VideoListResponse {
