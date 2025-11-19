@@ -26,8 +26,11 @@ export default function NavMenu({ tabs, tabIndex, selectedTabName, initialServer
   const searchParams = useSearchParams();
   const [isOpen, setIsOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+  const [isServerSelectorOpen, setIsServerSelectorOpen] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const serverSelectorRef = useRef<HTMLDivElement>(null);
   const [selectedServerId, setSelectedServerId] = useState<string>(
     initialServerId || resourceServers[0].id
   );
@@ -43,6 +46,35 @@ export default function NavMenu({ tabs, tabIndex, selectedTabName, initialServer
       searchInputRef.current.focus();
     }
   }, [isSearchOpen]);
+
+  // Close popups when clicking outside or pressing ESC
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (isCategoryOpen && !target.closest('.category-popup') && !target.closest('button')) {
+        setIsCategoryOpen(false);
+      }
+      if (isServerSelectorOpen && serverSelectorRef.current && !serverSelectorRef.current.contains(target)) {
+        setIsServerSelectorOpen(false);
+      }
+    };
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsCategoryOpen(false);
+        setIsServerSelectorOpen(false);
+        setIsSearchOpen(false);
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleEscape);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [isCategoryOpen, isServerSelectorOpen]);
 
   const selectedServer = resourceServers.find(s => s.id === selectedServerId) || resourceServers[0];
   const serverDisplayName = selectedServer.name.replace('(切)', '');
@@ -82,7 +114,9 @@ export default function NavMenu({ tabs, tabIndex, selectedTabName, initialServer
       setSearchInput("");
     } else {
       setIsSearchOpen(true);
-      setIsOpen(false); // Close menu when opening search
+      setIsOpen(false);
+      setIsCategoryOpen(false);
+      setIsServerSelectorOpen(false);
     }
   };
 
@@ -93,10 +127,49 @@ export default function NavMenu({ tabs, tabIndex, selectedTabName, initialServer
         <div className="flex items-center justify-between gap-2 sm:gap-4">
           {/* Left: Server Logo */}
           {!isSearchOpen && (
-            <div className="flex items-center gap-2 min-w-0">
-              <div className="text-sm sm:text-base font-semibold text-green-400 whitespace-nowrap">
-                {serverDisplayName}
-              </div>
+            <div className="flex items-center gap-2 min-w-0 relative" ref={serverSelectorRef}>
+              <button
+                onClick={() => {
+                  setIsServerSelectorOpen(!isServerSelectorOpen);
+                  setIsCategoryOpen(false);
+                  setIsOpen(false);
+                }}
+                className="text-sm sm:text-base font-semibold text-green-400 whitespace-nowrap hover:text-green-300 transition-colors cursor-pointer active:scale-95"
+              >
+                {serverDisplayName} ▾
+              </button>
+
+              {/* Server Selector Dropdown */}
+              {isServerSelectorOpen && (
+                <div className="absolute top-full left-0 mt-2 bg-black/95 backdrop-blur-md rounded-xl border border-white/20 shadow-2xl min-w-[200px] z-50 animate-fadeIn">
+                  <div className="p-3">
+                    <div className="text-xs text-gray-400 mb-2">切换资源服务器</div>
+                    {resourceServers.map((server) => (
+                      <button
+                        key={server.id}
+                        onClick={() => {
+                          setSelectedServerId(server.id);
+                          localStorage.setItem(STORAGE_KEY, server.id);
+                          document.cookie = `selected_server=${server.id}; path=/; max-age=31536000`;
+                          const params = new URLSearchParams(searchParams.toString());
+                          params.set('t', '1');
+                          params.delete('page');
+                          params.delete('name');
+                          router.push(`/?${params.toString()}`);
+                          setIsServerSelectorOpen(false);
+                        }}
+                        className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-all mb-1 last:mb-0 ${
+                          selectedServerId === server.id
+                            ? 'bg-green-600 text-white font-medium'
+                            : 'text-gray-300 hover:bg-white/10'
+                        }`}
+                      >
+                        {server.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
@@ -120,9 +193,16 @@ export default function NavMenu({ tabs, tabIndex, selectedTabName, initialServer
             </form>
           ) : (
             <div className="flex-1 flex justify-center min-w-0">
-              <h1 className="text-lg sm:text-xl md:text-2xl font-bold bg-linear-to-r from-green-300 to-teal-400 bg-clip-text text-transparent truncate">
-                {selectedTabName}
-              </h1>
+              <button
+                onClick={() => {
+                  setIsCategoryOpen(!isCategoryOpen);
+                  setIsOpen(false);
+                  setIsServerSelectorOpen(false);
+                }}
+                className="text-lg sm:text-xl md:text-2xl font-bold bg-linear-to-r from-green-300 to-teal-400 bg-clip-text text-transparent truncate hover:scale-105 transition-transform cursor-pointer active:scale-95"
+              >
+                {selectedTabName} ▾
+              </button>
             </div>
           )}
 
@@ -144,7 +224,11 @@ export default function NavMenu({ tabs, tabIndex, selectedTabName, initialServer
             {/* Menu Toggle Button */}
             {!isSearchOpen && (
               <button
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={() => {
+                  setIsOpen(!isOpen);
+                  setIsCategoryOpen(false);
+                  setIsServerSelectorOpen(false);
+                }}
                 className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-all duration-200 border border-white/20 whitespace-nowrap"
                 aria-label="Toggle menu"
               >
@@ -163,6 +247,49 @@ export default function NavMenu({ tabs, tabIndex, selectedTabName, initialServer
             )}
           </div>
         </div>
+
+        {/* Category Quick Selector - Full Width */}
+        {isCategoryOpen && (
+          <div className="mt-4 animate-fadeIn category-popup">
+            <div className="bg-black/95 backdrop-blur-md rounded-xl border border-white/20 shadow-2xl max-h-[60vh] overflow-y-auto">
+              <div className="p-4">
+                <div className="text-xs text-gray-400 mb-3">选择分类</div>
+                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-10 gap-2">
+                  {tabs?.class.map((item) => {
+                    const isActive = tabIndex == item.type_id;
+                    if (
+                      item.type_name === "伦理片" ||
+                      item.type_name.includes("伦理") ||
+                      item.type_name.includes("三级") ||
+                      item.type_name.includes("写真") ||
+                      item.type_name.includes("跳舞") ||
+                      item.type_name.includes("成人")
+                    ) {
+                      return null;
+                    }
+
+                    return (
+                      <Link
+                        key={item.type_id}
+                        href={`./?t=${item.type_id}`}
+                        onClick={() => setIsCategoryOpen(false)}
+                        prefetch={true}
+                        scroll={false}
+                        className={`px-3 py-2 rounded-lg text-xs sm:text-sm text-center transition-all ${
+                          isActive
+                            ? 'bg-green-600 text-white font-bold shadow-lg'
+                            : 'bg-white/5 text-gray-300 hover:bg-white/15 hover:scale-105 active:scale-95'
+                        }`}
+                      >
+                        {item.type_name}
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Collapsible Menu */}
         {isOpen && (
