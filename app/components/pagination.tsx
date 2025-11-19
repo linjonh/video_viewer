@@ -100,7 +100,7 @@ function PaginationNumber({
   return isActive || position === "middle" ? (
     <div className={classNameClsx}>{page}</div>
   ) : (
-    <Link href={href} className={classNameClsx}>
+    <Link href={href} className={classNameClsx} prefetch={true} scroll={true}>
       {page}
     </Link>
   );
@@ -138,7 +138,7 @@ function PaginationArrow({
   return isDisabled ? (
     <div className={classNameClsx}>{icon}</div>
   ) : (
-    <Link className={classNameClsx} href={href}>
+    <Link className={classNameClsx} href={href} prefetch={true} scroll={true}>
       {icon}
     </Link>
   );

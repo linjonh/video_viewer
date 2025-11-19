@@ -215,6 +215,8 @@ export default function NavMenu({ tabs, tabIndex, selectedTabName, initialServer
                         href={`./?t=${item.type_id}`}
                         className="block"
                         onClick={handleTabClick}
+                        prefetch={true}
+                        scroll={false}
                       >
                         {item.type_name}
                       </Link>

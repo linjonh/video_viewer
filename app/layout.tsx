@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import SWRegister from "./components/sw-register";
 import Footer from "./components/footer";
+import LoadingBar from "./components/loading-bar";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -32,6 +33,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <SWRegister />
+        <LoadingBar />
         <div className="background-container">
           <div className="background-overlay"></div>
           <div className="content-wrapper flex flex-col min-h-screen">
