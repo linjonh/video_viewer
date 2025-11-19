@@ -37,6 +37,7 @@ export default function Pagination({
           direction="left"
           href={createPageURL(currentPage - 1)}
           isDisabled={currentPage <= 1}
+          lableName="上一页"
         />
 
         <div className="flex -space-x-px">
@@ -66,6 +67,7 @@ export default function Pagination({
           direction="right"
           href={createPageURL(currentPage + 1)}
           isDisabled={currentPage >= totalPages}
+          lableName="下一页"
         />
       </div>
     </>
@@ -111,11 +113,13 @@ function PaginationArrow({
   direction,
   isDisabled,
   className,
+  lableName,
 }: {
   href: string;
   direction: "left" | "right";
   isDisabled?: boolean;
   className?: string;
+  lableName?: string;
 }) {
   const classNameClsx = clsx(
     "flex items-center justify-center rounded-lg border transition-all duration-200",
@@ -136,9 +140,9 @@ function PaginationArrow({
     );
 
   return isDisabled ? (
-    <div className={classNameClsx}>{icon}</div>
+    <div className={classNameClsx} aria-label="Disabled pagination arrow">{icon}</div>
   ) : (
-    <Link className={classNameClsx} href={href} prefetch={true} scroll={true}>
+    <Link className={classNameClsx} href={href} prefetch={true} scroll={true} aria-label={lableName}>
       {icon}
     </Link>
   );

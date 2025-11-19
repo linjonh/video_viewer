@@ -1,15 +1,17 @@
-import { loadVideoList, search } from "../data/repository";
+import { loadClassTabs, loadVideoList, search } from "../data/repository";
 import VideoList from "./video-list";
 import Pagination from "./pagination";
+import ErrorMessage from "./error-message";
 
 interface VideoContentProps {
     searchName?: string;
     page: number;
     tab_typeId?: number;
     serverUrl: string;
+    categoryName?: string;
 }
 
-export async function VideoContent({ searchName, page, tab_typeId, serverUrl }: VideoContentProps) {
+export async function VideoContent({ searchName, page, tab_typeId, serverUrl, categoryName }: VideoContentProps) {
     let data;
 
     if (searchName != null) {
@@ -20,17 +22,21 @@ export async function VideoContent({ searchName, page, tab_typeId, serverUrl }: 
     }
 
     if (data == null) {
-        return (
-            <div className="mt-20 text-center">
-                <p className="text-red-400 text-lg">出错了，请重试</p>
-            </div>
-        );
+        return <ErrorMessage />;
     }
 
     if (data.list?.length === 0) {
+        // Get category name for display if not provided
+        let displayName = categoryName || "全部";
+        if (!categoryName && tab_typeId) {
+            const tabs = await loadClassTabs(serverUrl);
+            displayName = tabs?.class.find((s: any) => s.type_id == tab_typeId)?.type_name || "全部";
+        }
         return (
             <div className="mt-20 text-center">
-                <p className="text-gray-400 text-lg">暂无数据</p>
+                <p className="text-gray-400 text-lg">
+                    {displayName} - 暂无数据
+                </p>
             </div>
         );
     }
