@@ -8,12 +8,12 @@ export default function Footer() {
           <div className="flex items-center gap-2">
             <span>© {currentYear} Video Viewer</span>
             <span className="hidden sm:inline text-gray-500">|</span>
-            <span className="text-gray-400">All Rights Reserved</span>
+            <span className="text-gray-400">所有权利保留</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-gray-400">Made with</span>
+            <span className="text-gray-400">免责声明：本站使用第三方接口，视频内容皆为第三方数据，请勿轻易相信影片及视频里的广告内容。本站不存在存储视频和录制视频的行为。由</span>
             <span className="text-red-400 animate-pulse">♥Jaysen</span>
-            <span className="text-gray-400">by Developer</span>
+            <span className="text-gray-400">开发</span>
           </div>
         </div>
       </div>

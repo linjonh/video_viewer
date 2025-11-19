@@ -5,6 +5,9 @@ import SWRegister from "./components/sw-register";
 import Footer from "./components/footer";
 import LoadingBar from "./components/loading-bar";
 import { Suspense } from "react";
+import { GoogleAnalytics } from "@next/third-parties/google";
+
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -45,6 +48,7 @@ export default function RootLayout({
           </div>
         </div>
       </body>
+      <GoogleAnalytics gaId="G-L1S92GG6WK" />
     </html>
   );
 }
