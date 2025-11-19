@@ -25,8 +25,8 @@ export default function LoadingBar() {
   if (!loading) return null;
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-[9999] h-1">
-      <div className="h-full bg-gradient-to-r from-green-500 via-teal-500 to-green-500 animate-loading-bar" />
+    <div className="fixed top-0 left-0 right-0 z-9999 h-1">
+      <div className="h-full bg-linear-to-r from-green-500 via-teal-500 to-green-500 animate-loading-bar" />
     </div>
   );
 }

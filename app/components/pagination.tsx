@@ -26,7 +26,7 @@ export default function Pagination({
     return url;
   };
   const item_width =
-    "md:h-10 md:w-10 max-sm:w-8 max-sm:h-8 text-sm justify-center items-center ";
+    "md:h-10  md:w-12 max-sm:w-11 max-sm:h-8 text-sm justify-center items-center ";
   return (
     <>
       {/*  NOTE: Uncomment this code in Chapter 11 */}
