@@ -4,10 +4,13 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { tvResourceUrl } from "./types";
 
-export async function loadVideoList({ page = 1, limit = 80, clasTab = 1, serverUrl }: { page?: number; limit?: number; clasTab?: number; serverUrl?: string }) {
+export async function loadVideoList({ page = 1, limit = 80, clasTab, serverUrl }: { page?: number; limit?: number; clasTab?: number; serverUrl?: string }) {
   try {
     const baseUrl = serverUrl || "https://api.guangsuapi.com/api.php/provide/vod/";
-    const url = `${baseUrl}?ac=videolist&limit=${limit}&pg=${page}&t=${clasTab}`;
+    // Only include t parameter if clasTab is provided
+    const url = clasTab
+      ? `${baseUrl}?ac=videolist&limit=${limit}&pg=${page}&t=${clasTab}`
+      : `${baseUrl}?ac=videolist&limit=${limit}&pg=${page}`;
     // log("url:", url);
     // Cache for 10 minutes - video lists update periodically
     const res = await fetch(url, {

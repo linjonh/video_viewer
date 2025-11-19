@@ -5,7 +5,7 @@ import Pagination from "./pagination";
 interface VideoContentProps {
     searchName?: string;
     page: number;
-    tab_typeId: number;
+    tab_typeId?: number;
     serverUrl: string;
 }
 
@@ -15,6 +15,7 @@ export async function VideoContent({ searchName, page, tab_typeId, serverUrl }: 
     if (searchName != null) {
         data = await search(searchName, serverUrl);
     } else {
+        // Only pass clasTab if it's defined (not undefined)
         data = await loadVideoList({ page, clasTab: tab_typeId, serverUrl });
     }
 

@@ -15,13 +15,14 @@ interface NavMenuItem {
 
 interface NavMenuProps {
   tabs: { class: NavMenuItem[] };
-  tabIndex: number;
+  tabId: number;
   selectedTabName: string;
   initialServerId?: string;
   searchName?: string;
 }
 
-export default function NavMenu({ tabs, tabIndex, selectedTabName, initialServerId, searchName }: NavMenuProps) {
+export default function NavMenu({ tabs, tabId, selectedTabName, initialServerId, searchName }: NavMenuProps) {
+  // console.log("tabs:", tabs, "tabId:", tabId);
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isOpen, setIsOpen] = useState(false);
@@ -91,9 +92,9 @@ export default function NavMenu({ tabs, tabIndex, selectedTabName, initialServer
     // Set cookie
     document.cookie = `selected_server=${newServerId}; path=/; max-age=31536000`;
 
-    // Reset to t=1 when switching servers
+    // Reset to t=0 when switching servers
     const params = new URLSearchParams(searchParams.toString());
-    params.set('t', '1');
+    params.set('t', '0');
     params.delete('page');
     params.delete('name');
 
@@ -152,17 +153,16 @@ export default function NavMenu({ tabs, tabIndex, selectedTabName, initialServer
                           localStorage.setItem(STORAGE_KEY, server.id);
                           document.cookie = `selected_server=${server.id}; path=/; max-age=31536000`;
                           const params = new URLSearchParams(searchParams.toString());
-                          params.set('t', '1');
+                          params.set('t', '0');
                           params.delete('page');
                           params.delete('name');
                           router.push(`/?${params.toString()}`);
                           setIsServerSelectorOpen(false);
                         }}
-                        className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-all mb-1 last:mb-0 ${
-                          selectedServerId === server.id
-                            ? 'bg-green-600 text-white font-medium'
-                            : 'text-gray-300 hover:bg-white/10'
-                        }`}
+                        className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-all mb-1 last:mb-0 ${selectedServerId === server.id
+                          ? 'bg-green-600 text-white font-medium'
+                          : 'text-gray-300 hover:bg-white/10'
+                          }`}
                       >
                         {server.name}
                       </button>
@@ -255,8 +255,22 @@ export default function NavMenu({ tabs, tabIndex, selectedTabName, initialServer
               <div className="p-4">
                 <div className="text-xs text-gray-400 mb-3">选择分类</div>
                 <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-10 gap-2">
+                  {/* "All" tab - shows when no t parameter */}
+                  <Link
+                    href="./"
+                    onClick={() => setIsCategoryOpen(false)}
+                    prefetch={true}
+                    scroll={false}
+                    className={`px-3 py-2 rounded-lg text-xs sm:text-sm text-center transition-all 
+                      ${(!searchParams.get('t') || tabId == 0)
+                        ? 'bg-green-600 text-white font-bold shadow-lg'
+                        : 'bg-white/5 text-gray-300 hover:bg-white/15 hover:scale-105 active:scale-95'
+                      }`}
+                  >
+                    全部
+                  </Link>
                   {tabs?.class.map((item) => {
-                    const isActive = tabIndex == item.type_id;
+                    const isActive = tabId == item.type_id;
                     if (
                       item.type_name === "伦理片" ||
                       item.type_name.includes("伦理") ||
@@ -275,11 +289,10 @@ export default function NavMenu({ tabs, tabIndex, selectedTabName, initialServer
                         onClick={() => setIsCategoryOpen(false)}
                         prefetch={true}
                         scroll={false}
-                        className={`px-3 py-2 rounded-lg text-xs sm:text-sm text-center transition-all ${
-                          isActive
-                            ? 'bg-green-600 text-white font-bold shadow-lg'
-                            : 'bg-white/5 text-gray-300 hover:bg-white/15 hover:scale-105 active:scale-95'
-                        }`}
+                        className={`px-3 py-2 rounded-lg text-xs sm:text-sm text-center transition-all ${isActive
+                          ? 'bg-green-600 text-white font-bold shadow-lg'
+                          : 'bg-white/5 text-gray-300 hover:bg-white/15 hover:scale-105 active:scale-95'
+                          }`}
                       >
                         {item.type_name}
                       </Link>
@@ -317,8 +330,26 @@ export default function NavMenu({ tabs, tabIndex, selectedTabName, initialServer
             <nav className="bg-white/5 backdrop-blur-sm rounded-xl p-3 border border-white/10">
               <div className="text-xs text-gray-400 mb-2">选择分类</div>
               <ul className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-8 gap-2 text-white">
+                {/* "All" tab - shows when no t parameter */}
+                <li
+                  className={`px-1 sm:px-2 py-1.5 rounded-lg transition-all duration-200 text-xs sm:text-sm whitespace-nowrap text-center 
+                    ${(!searchParams.get('t') || tabId == 0)
+                      ? "bg-white/20 font-bold text-green-300 shadow-lg scale-105"
+                      : "bg-white/5 hover:bg-white/15 hover:scale-105"
+                    } active:scale-95`}
+                >
+                  <Link
+                    href="./"
+                    className="block"
+                    onClick={handleTabClick}
+                    prefetch={true}
+                    scroll={false}
+                  >
+                    全部
+                  </Link>
+                </li>
                 {tabs?.class.map((item) => {
-                  const isActive = tabIndex == item.type_id;
+                  const isActive = tabId == item.type_id;
                   if (
                     item.type_name === "伦理片" ||
                     item.type_name.includes("伦理") ||
@@ -333,8 +364,8 @@ export default function NavMenu({ tabs, tabIndex, selectedTabName, initialServer
                   return (
                     <li
                       className={`px-1 sm:px-2 py-1.5 rounded-lg transition-all duration-200 text-xs sm:text-sm whitespace-nowrap text-center ${isActive
-                          ? "bg-white/20 font-bold text-green-300 shadow-lg scale-105"
-                          : "bg-white/5 hover:bg-white/15 hover:scale-105"
+                        ? "bg-white/20 font-bold text-green-300 shadow-lg scale-105"
+                        : "bg-white/5 hover:bg-white/15 hover:scale-105"
                         } active:scale-95`}
                       key={item.type_id}
                     >

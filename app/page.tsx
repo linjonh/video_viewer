@@ -9,7 +9,7 @@ import NavMenuSkeleton from "./components/nav-menu-skeleton";
 
 export default async function Home(props: { searchParams: { name?: string, page?: number, t?: number } }) {
   const searchParams = await props.searchParams
-  const tab_typeId = searchParams.t ?? 1;
+  const tab_typeId = searchParams.t;
 
   // Get selected server from cookie
   const cookieStore = await cookies();
