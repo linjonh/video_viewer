@@ -18,9 +18,27 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const BASE_URL = 'https://video.codelin.vip';
+const desc = "凡人修仙传，仙逆，国漫，bilibili，腾讯，爱奇艺，资源，视频，电影，动漫，短剧，纪录片，美剧，泰剧，韩剧，体育，视频播放器，播放器";
+const title = '视频影视播放器';
+
 export const metadata: Metadata = {
-  title: "视频影视浏览器",
-  description: "视频，电影，动漫，短剧，纪录片，美剧，泰剧，韩剧，体育",
+  metadataBase: new URL(BASE_URL),
+  title: title,
+  description: desc,
+  alternates: {
+    canonical: BASE_URL,
+    languages: {
+      'zh-CN': BASE_URL,
+    }
+  },
+  openGraph: {
+    title: title,
+    description: desc,
+    url: BASE_URL,
+    siteName: title,
+    // images: [{ url: `${BASE_URL}/og.png` }]
+  },
 };
 
 export default function RootLayout({
