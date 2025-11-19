@@ -6,7 +6,7 @@ export default function Footer() {
       <div className="max-w-screen-2xl mx-auto">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-gray-300">
           <div className="flex items-center gap-2">
-            <span>© {currentYear} Video Viewer</span>
+            <span>© {currentYear} Video Viewer&Player</span>
             <span className="hidden sm:inline text-gray-500">|</span>
             <span className="text-gray-400">所有权利保留</span>
             <span className="hidden sm:inline text-gray-500">|</span>
