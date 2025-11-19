@@ -195,18 +195,20 @@ export default function NavMenu({ tabs, tabIndex, selectedTabName, initialServer
                   if (
                     item.type_name === "伦理片" ||
                     item.type_name.includes("伦理") ||
-                    item.type_name.includes("三级")
+                    item.type_name.includes("三级") ||
+                    item.type_name.includes("写真") ||
+                    item.type_name.includes("跳舞")
+                    || item.type_name.includes("成人")
                   ) {
                     return null;
                   }
 
                   return (
                     <li
-                      className={`px-1 sm:px-2 py-1.5 rounded-lg transition-all duration-200 text-xs sm:text-sm whitespace-nowrap text-center ${
-                        isActive
+                      className={`px-1 sm:px-2 py-1.5 rounded-lg transition-all duration-200 text-xs sm:text-sm whitespace-nowrap text-center ${isActive
                           ? "bg-white/20 font-bold text-green-300 shadow-lg scale-105"
                           : "bg-white/5 hover:bg-white/15 hover:scale-105"
-                      } active:scale-95`}
+                        } active:scale-95`}
                       key={item.type_id}
                     >
                       <Link

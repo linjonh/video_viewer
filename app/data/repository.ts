@@ -9,7 +9,10 @@ export async function loadVideoList({ page = 1, limit = 80, clasTab = 1, serverU
     const baseUrl = serverUrl || "https://api.guangsuapi.com/api.php/provide/vod/";
     const url = `${baseUrl}?ac=videolist&limit=${limit}&pg=${page}&t=${clasTab}`;
     log("url:", url);
-    const res = await fetch(url);
+    // Cache for 10 minutes - video lists update periodically
+    const res = await fetch(url, {
+      next: { revalidate: 600 }
+    });
     if (res.status == 200) {
       const json = await res.json();
       return json;
@@ -26,7 +29,10 @@ export async function loadVideoDetail(id: string, serverUrl?: string) {
   try {
     const baseUrl = serverUrl || "https://api.guangsuapi.com/api.php/provide/vod/";
     const url = `${baseUrl}?ac=detail&ids=${id}`;
-    const res = await fetch(url);
+    // Cache for 30 minutes - video details rarely change
+    const res = await fetch(url, {
+      next: { revalidate: 1800 }
+    });
     if (res.status == 200) {
       const json = await res.json();
       return json;
@@ -43,7 +49,10 @@ export async function search(key_world: string, serverUrl?: string) {
   try {
     const baseUrl = serverUrl || "https://api.guangsuapi.com/api.php/provide/vod/";
     const url = `${baseUrl}?ac=videolist&wd=${key_world}`;
-    const res = await fetch(url);
+    // No cache for search - users expect fresh results
+    const res = await fetch(url, {
+      cache: 'no-store'
+    });
     if (res.status == 200) {
       const json = await res.json();
       return json;
@@ -73,7 +82,10 @@ export async function loadClassTabs(serverUrl?: string) {
   try {
     const url = serverUrl || `https://api.guangsuapi.com/api.php/provide/vod/`;
     log("url:", url);
-    const res = await fetch(url);
+    // Cache for 1 hour - class tabs don't change frequently
+    const res = await fetch(url, {
+      next: { revalidate: 3600 }
+    });
     if (res.status == 200) {
       const json = await res.json();
       return json;
