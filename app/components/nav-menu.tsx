@@ -26,7 +26,7 @@ export default function NavMenu({ tabs, tabIndex, selectedTabName, initialServer
   const searchParams = useSearchParams();
   const [isOpen, setIsOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [searchInput, setSearchInput] = useState(searchName || "");
+  const [searchInput, setSearchInput] = useState("");
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [selectedServerId, setSelectedServerId] = useState<string>(
     initialServerId || resourceServers[0].id
@@ -43,10 +43,6 @@ export default function NavMenu({ tabs, tabIndex, selectedTabName, initialServer
       searchInputRef.current.focus();
     }
   }, [isSearchOpen]);
-
-  useEffect(() => {
-    setSearchInput(searchName || "");
-  }, [searchName]);
 
   const selectedServer = resourceServers.find(s => s.id === selectedServerId) || resourceServers[0];
   const serverDisplayName = selectedServer.name.replace('(切)', '');
@@ -112,7 +108,7 @@ export default function NavMenu({ tabs, tabIndex, selectedTabName, initialServer
                 type="text"
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
-                placeholder="搜索影片..."
+                placeholder={searchName || "搜索影片..."}
                 className="flex-1 text-center bg-white/90 text-gray-900 placeholder-gray-500 rounded-lg h-9 sm:h-10 px-3 sm:px-4 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-green-500 transition-all"
               />
               <button

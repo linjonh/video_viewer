@@ -117,7 +117,7 @@ export default function DetailContent({ info, playSources }: DetailContentProps)
             <h1 className=" text-center text-2xl sm:text-3xl  text-white p-2 bg-black/30">{info.vod_name}</h1>
             {playSources.length > 1 ? (
               <>
-                <p className="px-3 pt-3 pb-2 text-sm text-gray-400 shrink-0">播放源：</p>
+                {/* <p className="px-3 pt-3 pb-2 text-sm text-gray-400 shrink-0">播放源：</p> */}
                 {/* Tab 切换源 */}
                 <div className="flex border-b border-white/10 bg-white/5 shrink-0">
                   {playSources.map((source, index) => {
@@ -126,7 +126,7 @@ export default function DetailContent({ info, playSources }: DetailContentProps)
                       <button
                         key={index}
                         onClick={() => setActiveSourceIndex(index)}
-                        className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
+                        className={`flex-1 px-4 py-1 text-sm font-medium transition-colors ${
                           activeSourceIndex === index ? theme.tab : theme.tabHover
                         }`}
                       >
@@ -137,7 +137,8 @@ export default function DetailContent({ info, playSources }: DetailContentProps)
                 </div>
               </>
             ) : (
-              <p className="px-3 pt-3 pb-2 text-sm text-gray-400 shrink-0">选集：</p>
+            //   <p className="px-3 pt-3 pb-2 text-sm text-gray-400 shrink-0">选集：</p>
+            <>  </>
             )}
 
             {/* 集数列表 - 3列Grid布局，可滚动 */}
